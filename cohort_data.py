@@ -1,8 +1,8 @@
 """Functions to parse a file containing student data."""
 
-
 def all_houses(filename):
-    """Return a set of all house names in the given file.
+      
+  """Return a set of all house names in the given file.
 
     For example:
       >>> unique_houses('cohort_data.txt')
@@ -13,14 +13,22 @@ def all_houses(filename):
 
     Return:
       - set[str]: a set of strings
-    """
+  """
 
-    houses = set()
+  house_list = []
 
-    # TODO: replace this with your code
+  for line in open(filename):
+    line_list = line.split("|")
+    house_list.append(line_list[2])
 
-    return houses
+  #print(house_list)
 
+  houses = set(house_list)
+  test = houses.remove('')
+  #print(houses)
+  #print(f'this is a test {test}')
+  return houses
+all_houses('cohort_data.txt')
 
 def students_by_cohort(filename, cohort='All'):
     """Return a list of students' full names by cohort.
