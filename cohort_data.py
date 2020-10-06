@@ -15,14 +15,17 @@ def all_houses(filename):
       - set[str]: a set of strings
   """
 
-  house = set()
+  all_houses = set()
 
   for line in open(filename):
-    line_list = line.rsplit().split("|")
-    house.add(line_list[2])
+    house = line.strip().split('|')[2]
+    if house:
+      all_houses.add(house)
 
-  houses.remove('')
-  return houses
+  return all_houses
+
+
+#all_houses('cohort_data.txt')
 
 def students_by_cohort(filename, cohort='All'):
     """Return a list of students' full names by cohort.
@@ -52,30 +55,26 @@ def students_by_cohort(filename, cohort='All'):
       - list[list]: a list of lists
     """
 
-    cohorts = []
+    students = []
 
-    students_fall2015 = []
-    students_winter2016 = []
-    students_spring2016 = []
-    students_summer2016 = []
+    Fall_2015 = []
+    Winter_2016 = []
+    Spring_2016 = []
+    Summer_2016 = []
 
     for line in open(filename):
-      line_list = line.split('|')
-      full_name = line_list[0] + line_list[1]
-      cohort = line_list[4]
-      if line_list[2] != '':
-        if cohort == "Fall 2015":
-          students_fall2015.append(full_name)
-        elif line_list[4] == "Winter 2016":
-          students_winter2016.append(full_name)
-        elif line_list[4] == "Spring 2016":
-          students_spring2016.append(full_name)
-        elif cohort == "Summer 2016": 
-          students_summer2016.append(full_name)
-  
+      first, last, x, y, cohort_name = line.strip().split('|')
 
-    cohorts = students_fall2015 + students_winter2016 + students_spring2016 + students_summer2016
-    return cohorts
+      if cohort_name == 'Fall 2015':
+          Fall_2015.append(f'{first} {last}')
+      elif cohort_name == "Winter 2016":
+          Winter_2016.append(f'{first} {last}')
+      elif cohort_name == "Spring 2016":
+          Spring_2016.append(f'{first} {last}')
+      elif cohort_name == "Summer 2016":
+          Summer_2016.append(f'{first} {last}')
+
+    return 
 
 
 def all_names_by_house(filename):
@@ -186,9 +185,17 @@ def find_duped_last_names(filename):
       - set[str]: a set of strings
     """
 
-    # TODO: replace this with your code
+    last_names = []
+    duplicate_names = set()
 
-
+    for line in open(filename):
+      line = line.rstrip().split('|')
+      last_names.append(line[1])
+      if line[1] in last_names:
+        duplicate_names.add(line[1])
+    
+    return duplicate_names
+  
 def get_housemates_for(filename, name):
     """Return a set of housemates for the given student.
 
