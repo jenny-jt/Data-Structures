@@ -15,20 +15,14 @@ def all_houses(filename):
       - set[str]: a set of strings
   """
 
-  house_list = []
+  house = set()
 
   for line in open(filename):
-    line_list = line.split("|")
-    house_list.append(line_list[2])
+    line_list = line.rsplit().split("|")
+    house.add(line_list[2])
 
-  #print(house_list)
-
-  houses = set(house_list)
-  test = houses.remove('')
-  #print(houses)
-  #print(f'this is a test {test}')
+  houses.remove('')
   return houses
-all_houses('cohort_data.txt')
 
 def students_by_cohort(filename, cohort='All'):
     """Return a list of students' full names by cohort.
@@ -58,11 +52,30 @@ def students_by_cohort(filename, cohort='All'):
       - list[list]: a list of lists
     """
 
-    students = []
+    cohorts = []
 
-    # TODO: replace this with your code
+    students_fall2015 = []
+    students_winter2016 = []
+    students_spring2016 = []
+    students_summer2016 = []
 
-    return sorted(students)
+    for line in open(filename):
+      line_list = line.split('|')
+      full_name = line_list[0] + line_list[1]
+      cohort = line_list[4]
+      if line_list[2] != '':
+        if cohort == "Fall 2015":
+          students_fall2015.append(full_name)
+        elif line_list[4] == "Winter 2016":
+          students_winter2016.append(full_name)
+        elif line_list[4] == "Spring 2016":
+          students_spring2016.append(full_name)
+        elif cohort == "Summer 2016": 
+          students_summer2016.append(full_name)
+  
+
+    cohorts = students_fall2015 + students_winter2016 + students_spring2016 + students_summer2016
+    return cohorts
 
 
 def all_names_by_house(filename):
