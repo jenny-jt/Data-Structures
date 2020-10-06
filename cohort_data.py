@@ -57,25 +57,13 @@ def students_by_cohort(filename, cohort='All'):
 
     students = []
 
-    Fall_2015 = []
-    Winter_2016 = []
-    Spring_2016 = []
-    Summer_2016 = []
-
     for line in open(filename):
       first, last, x, y, cohort_name = line.strip().split('|')
 
-      if cohort_name == 'Fall 2015':
-          Fall_2015.append(f'{first} {last}')
-      elif cohort_name == "Winter 2016":
-          Winter_2016.append(f'{first} {last}')
-      elif cohort_name == "Spring 2016":
-          Spring_2016.append(f'{first} {last}')
-      elif cohort_name == "Summer 2016":
-          Summer_2016.append(f'{first} {last}')
+      if (len(cohort_name) > 1) and cohort in ("All", cohort_name):
+        students.append(f'{first} {last}')
 
-    return 
-
+    return sorted(students)
 
 def all_names_by_house(filename):
     """Return a list that contains rosters for all houses, ghosts, instructors.
