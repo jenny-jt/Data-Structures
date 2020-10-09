@@ -57,10 +57,12 @@ def students_by_cohort(filename, cohort='All'):
 
     students = []
 
-    for line in open(filename):
-      first, last, x, y, cohort_name = line.strip().split('|')
+    cohort_data = open(filename)
 
-      if (len(cohort_name) > 1) and cohort in ("All", cohort_name):
+    for line in cohort_data:
+      first, last, _, _, cohort_name = line.strip().split('|')
+
+      if len(cohort_name) > 1 and cohort in ("All", cohort_name):
         students.append(f'{first} {last}')
 
     return sorted(students)
@@ -95,7 +97,6 @@ def all_names_by_house(filename):
     Return:
       - list[list]: a list of lists
     """
-
     dumbledores_army = []
     gryffindor = []
     hufflepuff = []
@@ -104,9 +105,37 @@ def all_names_by_house(filename):
     ghosts = []
     instructors = []
 
-    # TODO: replace this with your code
+    cohort_data = open(filename)
 
-    return []
+    for line in cohort_data:
+      first, last, house, _, cohort_name = line.strip().split('|')
+
+      full_name = f'{first} {last}'
+
+      if house:
+        if house == "Dumbledore's Army":
+          dumbledores_army.append(full_name)
+        elif house == "Gryffindor":
+          gryffindor.append(full_name)
+        elif house == "Hufflepuff":
+          hufflepuff.append(full_name)
+        elif house == "Ravenclaw":
+          ravenclaw.append(full_name)
+        elif house == "Slytherin":
+          slytherin.append(full_name)
+      else:
+        if cohort_name == "I":
+          instructors.append(full_name)
+        elif cohort_name == "G":
+          ghosts.append(full_name)
+
+    return [sorted(dumbledores_army), 
+            sorted(gryffindor), 
+            sorted(hufflepuff), 
+            sorted(ravenclaw), 
+            sorted(slytherin), 
+            sorted(ghosts), 
+            sorted(instructors)]
 
 
 def all_data(filename):
@@ -127,10 +156,15 @@ def all_data(filename):
     Return:
       - list[tuple]: a list of tuples
     """
-
     all_data = []
 
-    # TODO: replace this with your code
+    cohort_data = open(filename)
+
+    for line in cohort_data:
+      first, last, house, advisor, cohort = line.strip().split('|')
+      full_name = f'{first} {last}'
+
+      all_data.append((full_name, house, advisor, cohort))
 
     return all_data
 
@@ -156,7 +190,10 @@ def get_cohort_for(filename, name):
       - str: the person's cohort or None
     """
 
-    # TODO: replace this with your code
+    for full_name, house, advisor, cohort in all_data(filename):
+      if full_name == name:
+        return cohort
+
 
 
 def find_duped_last_names(filename):
@@ -176,11 +213,14 @@ def find_duped_last_names(filename):
     last_names = []
     duplicate_names = set()
 
-    for line in open(filename):
-      line = line.rstrip().split('|')
-      last_names.append(line[1])
-      if line[1] in last_names:
-        duplicate_names.add(line[1])
+    for full_name, house, advisor, cohort in all_data(filename):
+      last = full_name.split(' ')[-1]
+      
+
+      if last in last_names: #student with same last name
+        duplicate_names.add(last) #add to dup
+
+      last_names.append(last) #otherwise add last name to set/list
     
     return duplicate_names
   
@@ -196,7 +236,28 @@ def get_housemates_for(filename, name):
     {'Angelina Johnson', ..., 'Seamus Finnigan'}
     """
 
-    # TODO: replace this with your code
+    #all data is a list of tuples
+    #if have name, need to find house and cohort, both of which are in all_data
+    #how to get whole tuple that has name
+
+    target_person = None
+    housemates = set()
+
+    for person in all_data(filename):
+      full_name, house, advisor, cohort = person
+
+      if name == full_name:
+        target_person = person  #must be this order. because person is known, have to set new variable to known object
+        break
+
+    if target_person:
+      target_name, target_house, _, target_cohort = target_person
+
+      for full_name, house, _, cohort in all_data(filename):
+        if ((house,cohort)) == (target_house,target_cohort) and full_name != name:
+          housemates.add(full_name)
+
+    return housemates
 
 
 ##############################################################################
